@@ -1,0 +1,135 @@
+simplify:
+  enabled: true
+  url: https://raw.githubusercontent.com/SimplifyJobs/Summer2027-Internships/dev/.github/scripts/listings.json
+  budget_per_day: 24
+  terms_wanted:
+    - Summer 2027
+  require_active: true
+  require_visible: true
+  require_bachelors: true
+vansh:
+  enabled: false
+  url: https://raw.githubusercontent.com/vanshb03/Summer2027-Internships/dev/.github/scripts/listings.json
+  budget_per_day: 24
+  season_wanted:
+    - Summer
+  require_year_in_title: 2027
+adzuna:
+  enabled: true
+  budget_per_day: 15
+  country: us
+  where: San Diego, California
+  distance_km: 32
+  results_per_page: 50
+  max_pages: 2
+  # Adzuna's `what` does an AND of every word — "part time software" requires the
+  # LITERAL words "part", "time", AND "software" all present, which returned 0
+  # results (verified empirically). Fixed two ways: (1) drop "part time" from the
+  # query text and rely on the `part_time=1` API param instead (added below, always
+  # sent) plus score.mjs's own employment_type gate as backstop; (2) use `what_or`
+  # (verified: real param, OR semantics) for genuine either/or queries instead of
+  # cramming "OR" into `what` as a literal word, which also returned 0.
+  queries:
+    - what: software
+      track: parttime
+    - what: student assistant
+      track: parttime
+    - what: IT support
+      track: parttime
+    - what: tutor computer science
+      track: parttime
+    - what: data entry
+      track: parttime
+    - what: front desk
+      track: parttime
+    - what_or: barista server retail cashier
+      track: parttime
+serpapi:
+  enabled: true
+  budget_per_day: 5
+  location: San Diego, California, United States
+  query_rotation:
+    - q: part time software engineer san diego
+      track: parttime
+    - q: part time IT help desk san diego
+      track: parttime
+    - q: software engineering internship summer 2027
+      track: internship
+    - q: student worker san diego state university
+      track: parttime
+    - q: part time data analyst san diego
+      track: parttime
+    - q: computer science tutor san diego
+      track: parttime
+    - q: summer 2027 internship computer science
+      track: internship
+boards:
+  enabled: true
+  budget_per_day: 200
+  greenhouse:
+    - stripe
+    - databricks
+    - robinhood
+    - airbnb
+    - dropbox
+    - figma
+    - asana
+    - instacart
+    - affirm
+    - chime
+    - brex
+    - gitlab
+    - cloudflare
+    - samsara
+    - verkada
+    - scaleai
+  ashby:
+    - ramp
+    - linear
+    - vanta
+    - openai
+    - notion
+    - deel
+    - mercury
+  lever:
+    - palantir
+    - kraken
+    - veeva
+  candidates:
+    greenhouse:
+      - stripe
+      - databricks
+      - robinhood
+      - airbnb
+      - dropbox
+      - figma
+      - asana
+      - instacart
+      - doordash
+      - affirm
+      - chime
+      - brex
+      - plaid
+      - gitlab
+      - cloudflare
+      - samsara
+      - verkada
+      - scaleai
+      - anduril
+    ashby:
+      - ramp
+      - linear
+      - vanta
+      - openai
+      - notion
+      - deel
+      - mercury
+    lever:
+      - palantir
+      - netflix
+      - kraken
+      - veeva
+      - shopify
+handshake:
+  enabled: false
+  note: Requires the Chrome extension + site permission for joinhandshake.com.

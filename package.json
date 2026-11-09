@@ -1,0 +1,20 @@
+{
+  "name": "job-hunt-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Automated internship and part-time job search: multi-source discovery, explainable ranking, a live job board, and résumé tailoring with a provenance guardrail.",
+  "author": "Jeremy Stuit",
+  "license": "MIT",
+  "engines": { "node": ">=22.5" },
+  "scripts": {
+    "sweep": "node scripts/sweep.mjs",
+    "score": "node scripts/score.mjs",
+    "push": "node scripts/push.mjs",
+    "build:board": "node scripts/build-board.mjs",
+    "tailor": "node scripts/render-resume.mjs",
+    "verify:boards": "node scripts/verify-boards.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": { "yaml": "^2.6.1" }
+}

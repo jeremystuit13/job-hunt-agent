@@ -1,0 +1,752 @@
+<title>Job Board</title>
+<meta name="description" content="Ranked Summer 2027 internships and San Diego part-time jobs: star, tailor, apply, track.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* ── Tokens ─────────────────────────────────────────────────────────── */
+  :root{
+    --paper:#eef1f5; --paper-raised:#ffffff; --paper-sunken:#e3e7ee;
+    --ink:#1b2333; --ink-soft:#4a5468; --ink-faint:#6f7a8e;
+    --line:#d7dce4;
+    --brass:#a8701f; --brass-soft:#f1e2c9; --brass-ink:#5c3d10;
+    --teal:#2c7a91; --teal-soft:#d9edf1; --teal-ink:#134a58;
+    --good:#3d8256; --good-soft:#dcefe2;
+    --urgent:#b8462f; --urgent-soft:#f7ded7;
+    --focus:#2c7a91;
+    --shadow: 0 1px 2px rgba(27,35,51,.06), 0 6px 20px -8px rgba(27,35,51,.18);
+    --pop: 0 10px 34px -8px rgba(27,35,51,.35), 0 2px 6px rgba(27,35,51,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#121826; --paper-raised:#1b2333; --paper-sunken:#0d121c;
+      --ink:#e7ebf2; --ink-soft:#aab3c4; --ink-faint:#8b95a9;
+      --line:#2b3546;
+      --brass:#d9a248; --brass-soft:#3a2d15; --brass-ink:#f1d9ac;
+      --teal:#5fb2c9; --teal-soft:#173a42; --teal-ink:#bfe6ee;
+      --good:#6fbf8c; --good-soft:#173625;
+      --urgent:#e2775f; --urgent-soft:#3c1f18;
+      --focus:#5fb2c9;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -10px rgba(0,0,0,.6);
+      --pop: 0 12px 38px -8px rgba(0,0,0,.75), 0 2px 6px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#121826; --paper-raised:#1b2333; --paper-sunken:#0d121c;
+    --ink:#e7ebf2; --ink-soft:#aab3c4; --ink-faint:#8b95a9;
+    --line:#2b3546;
+    --brass:#d9a248; --brass-soft:#3a2d15; --brass-ink:#f1d9ac;
+    --teal:#5fb2c9; --teal-soft:#173a42; --teal-ink:#bfe6ee;
+    --good:#6fbf8c; --good-soft:#173625;
+    --urgent:#e2775f; --urgent-soft:#3c1f18;
+    --focus:#5fb2c9;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -10px rgba(0,0,0,.6);
+    --pop: 0 12px 38px -8px rgba(0,0,0,.75), 0 2px 6px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+    font-size:15px; line-height:1.5;
+  }
+  h1,h2,h3,.display{ font-family:"Barlow Semi Condensed", ui-sans-serif, system-ui, sans-serif; font-weight:700; letter-spacing:.01em; text-wrap:balance; }
+  .mono{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums; }
+  a{ color:var(--teal); }
+  button,select,input,textarea{ font:inherit; color:inherit; }
+  button{ cursor:pointer; }
+  :focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .app{ max-width:1040px; margin:0 auto; padding:20px 20px 96px; }
+  [hidden]{ display:none !important; }
+
+  /* ── Header ─────────────────────────────────────────────────────────── */
+  header.top{ display:flex; align-items:center; gap:12px; padding:4px 2px 16px; }
+  header.top h1{ font-size:26px; margin:0; }
+  .grow{ flex:1; }
+  .byline{ color:var(--ink-faint); font-size:13px; }
+  .byline .mono{ color:var(--ink-soft); }
+  .icon-btn{ width:28px; height:28px; border-radius:50%; border:1px solid var(--line); background:var(--paper-raised); color:var(--ink-soft); font-weight:600; line-height:1; }
+  .icon-btn:hover{ border-color:var(--ink-faint); }
+
+  /* ── Track tabs ─────────────────────────────────────────────────────── */
+  .tabs{ display:flex; gap:10px; margin-bottom:16px; }
+  .tab{
+    color:var(--ink); flex:1; display:flex; align-items:center; justify-content:space-between;
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:10px;
+    padding:12px 18px; text-align:left; box-shadow:var(--shadow);
+    border-bottom:3px solid transparent; transition:transform .1s ease;
+  }
+  .tab:hover{ transform:translateY(-1px); }
+  .tab .label{ font-family:"Barlow Semi Condensed",sans-serif; font-weight:600; font-size:17px; text-transform:uppercase; letter-spacing:.04em; }
+  .tab .sub{ display:block; font-family:"Source Sans 3",sans-serif; font-weight:400; font-size:12px; text-transform:none; letter-spacing:0; color:var(--ink-faint); margin-top:2px; }
+  .tab .count{ font-family:"IBM Plex Mono",monospace; font-size:24px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .tab[data-track="internship"]{ border-bottom-color:var(--brass); } .tab[data-track="internship"] .count{ color:var(--brass); }
+  .tab[data-track="parttime"]{ border-bottom-color:var(--teal); } .tab[data-track="parttime"] .count{ color:var(--teal); }
+  .tab.active{ box-shadow:0 0 0 2px var(--focus), var(--shadow); }
+
+  /* ── Folder bar + toolbar ───────────────────────────────────────────── */
+  .bar{ display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap; position:relative; }
+  .folders{ display:flex; gap:6px; flex-wrap:wrap; }
+  .folder{
+    display:inline-flex; align-items:center; gap:7px; background:var(--paper-raised); border:1px solid var(--line);
+    border-radius:8px; padding:6px 12px; font-size:14px; font-weight:500;
+  }
+  .folder .n{ font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-faint); }
+  .folder[aria-pressed="true"]{ border-color:var(--focus); color:var(--focus); font-weight:600; }
+  .folder[aria-pressed="true"] .n{ color:var(--focus); }
+  .folder[data-folder="starred"] .star-glyph{ color:var(--brass); }
+  .ctl{ background:var(--paper-raised); border:1px solid var(--line); border-radius:8px; padding:6px 10px; font-size:13px; }
+  .ctl[aria-pressed="true"], .ctl.on{ border-color:var(--focus); color:var(--focus); font-weight:600; }
+  .badge{ display:inline-block; min-width:18px; padding:0 5px; margin-left:4px; border-radius:9px; background:var(--focus); color:var(--paper); font-size:11px; font-weight:600; text-align:center; }
+
+  /* popovers: filters + legend */
+  .pop{
+    position:absolute; z-index:40; background:var(--paper-raised); border:1px solid var(--line);
+    border-radius:10px; box-shadow:var(--pop); padding:14px 16px; font-size:13.5px;
+  }
+  .filters-pop{ right:0; top:calc(100% + 6px); width:290px; display:flex; flex-direction:column; gap:12px; }
+  .filters-pop label{ display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.05em; }
+  .filters-pop label.inline{ flex-direction:row; align-items:center; gap:8px; text-transform:none; letter-spacing:0; font-size:14px; color:var(--ink); }
+  .filters-pop select{ background:var(--paper-sunken); border:1px solid var(--line); border-radius:7px; padding:6px 8px; font-size:14px; color:var(--ink); text-transform:none; letter-spacing:0; }
+  .legend-pop{ right:0; top:44px; width:min(400px, 92vw); }
+  .legend-pop h3{ margin:0 0 6px; font-size:16px; }
+  .legend-pop dl{ margin:8px 0; display:grid; grid-template-columns:auto 1fr; gap:4px 12px; }
+  .legend-pop dt{ font-weight:600; } .legend-pop dd{ margin:0; color:var(--ink-soft); }
+  .legend-pop p{ margin:8px 0 0; color:var(--ink-soft); }
+
+  /* ── List ───────────────────────────────────────────────────────────── */
+  .board{ display:flex; flex-direction:column; gap:8px; }
+  .group-h{ display:flex; align-items:baseline; gap:10px; margin:14px 2px 2px; font-family:"Barlow Semi Condensed",sans-serif; font-size:15px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); }
+  .group-h .n{ font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-faint); font-weight:400; }
+  .strip{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:var(--brass-soft); color:var(--brass-ink); border-radius:10px; padding:10px 14px; font-size:14px; }
+  .strip .grow{ min-width:160px; }
+
+  .row{ position:relative; background:var(--paper-raised); border:1px solid var(--line); border-radius:10px; box-shadow:var(--shadow); }
+  .row:hover, .row:focus-within{ z-index:5; }
+  .row-line{ display:flex; align-items:center; gap:10px; padding:9px 12px 9px 8px; }
+  .star{ width:30px; height:30px; flex:none; border:0; background:transparent; font-size:19px; line-height:1; color:var(--ink-faint); border-radius:6px; opacity:.55; }
+  .star:hover{ opacity:1; color:var(--brass); background:var(--paper-sunken); }
+  .star.on{ color:var(--brass); opacity:1; }
+  .rank{ width:24px; flex:none; text-align:right; color:var(--ink-faint); font-size:13px; }
+  .row-main{ flex:1; min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:1px; text-align:left; background:transparent; border:0; padding:4px 2px; border-radius:6px; }
+  .row-main:hover .title{ text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:3px; }
+  .title{ font-weight:600; font-size:15px; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .meta{ color:var(--ink-soft); font-size:12.5px; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .track-dot{ display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:6px; position:relative; top:-1px; }
+  .track-dot.internship{ background:var(--brass); } .track-dot.parttime{ background:var(--teal); }
+
+  .score-cell{ position:relative; display:flex; align-items:center; gap:8px; flex:none; padding:4px 6px; border-radius:8px; cursor:help; }
+  .score-cell:hover, .score-cell:focus-visible{ background:var(--paper-sunken); }
+  .score{ font-size:18px; font-weight:600; min-width:28px; text-align:right; }
+  .bars{ display:flex; flex-direction:column; gap:2px; width:44px; }
+  .bar-track{ background:var(--paper-sunken); border-radius:3px; height:4px; overflow:hidden; }
+  .row-line .bar-track{ background:var(--line); }
+  .bar-fill{ height:100%; border-radius:3px; background:var(--ink-faint); }
+
+  /* hover peek: labeled breakdown + chips, only on demand */
+  .peek{
+    display:none; position:absolute; right:0; top:calc(100% + 6px); width:270px; z-index:30; cursor:default;
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:10px; box-shadow:var(--pop); padding:12px 14px;
+  }
+  .score-cell:hover .peek, .score-cell:focus .peek, .score-cell:focus-within .peek{ display:block; }
+  .peek h4{ margin:0 0 8px; font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); }
+  .m{ display:grid; grid-template-columns:96px 1fr 28px; align-items:center; gap:8px; font-size:12.5px; margin:4px 0; }
+  .m .bar-track{ height:6px; } .m .v{ font-family:"IBM Plex Mono",monospace; text-align:right; color:var(--ink-soft); }
+  .m .bar-fill{ background:var(--teal); }
+  .row[data-track="internship"] .m .bar-fill{ background:var(--brass); }
+  .peek .note{ margin-top:8px; font-size:11.5px; color:var(--ink-faint); }
+
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; margin:0 0 8px; }
+  .chip{ display:inline-flex; align-items:center; gap:4px; background:var(--paper-sunken); color:var(--ink-soft); font-size:12px; padding:2px 9px; border-radius:99px; white-space:nowrap; }
+  .chip.urgent{ background:var(--urgent-soft); color:var(--urgent); font-weight:600; }
+  .chip.pay{ background:var(--good-soft); color:var(--good); font-weight:600; }
+
+  .pill{ font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.03em; padding:3px 9px; border-radius:99px; white-space:nowrap; flex:none; }
+  .st-new{ background:var(--paper-sunken); color:var(--ink-soft); }
+  .st-shortlisted{ background:var(--brass-soft); color:var(--brass-ink); }
+  .st-tailoring{ background:var(--teal-soft); color:var(--teal-ink); }
+  .st-ready{ background:var(--good-soft); color:var(--good); }
+  .st-applied{ background:var(--good); color:var(--paper-raised); }
+  .st-interview{ background:var(--teal); color:var(--paper-raised); }
+  .st-offer{ background:var(--brass); color:var(--paper-raised); }
+  .st-rejected, .st-dismissed{ background:var(--paper-sunken); color:var(--ink-faint); }
+
+  .quick{ display:flex; gap:4px; flex:none; opacity:0; transition:opacity .12s ease; }
+  .row:hover .quick, .row:focus-within .quick, .row.open .quick{ opacity:1; }
+  @media (hover:none){ .quick{ opacity:1; } }
+  .qbtn{ border:1px solid var(--line); background:var(--paper-raised); border-radius:7px; padding:3px 9px; font-size:12.5px; color:var(--ink-soft); }
+  .qbtn:hover{ border-color:var(--ink-faint); color:var(--ink); }
+  .chev{ color:var(--ink-faint); transition:transform .15s ease; flex:none; width:16px; text-align:center; }
+  .row.open .chev{ transform:rotate(90deg); }
+
+  /* ── Detail ─────────────────────────────────────────────────────────── */
+  .row-detail{ display:none; padding:4px 16px 16px 76px; border-top:1px solid var(--line); }
+  .row.open .row-detail{ display:block; }
+  .rationale{ font-size:13.5px; color:var(--ink-soft); margin:12px 0 4px; max-width:65ch; }
+  .gap{ font-size:13px; color:var(--urgent); margin:4px 0 10px; max-width:65ch; }
+  .detail-grid{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:4px 28px; max-width:620px; margin:8px 0 10px; }
+  .actions{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .btn{ border:1px solid var(--line); background:var(--paper-raised); padding:7px 13px; border-radius:7px; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:var(--ink); }
+  .btn:hover{ border-color:var(--ink-faint); }
+  .btn.primary{ background:var(--brass); border-color:var(--brass); color:#211404; }
+  .btn.primary[disabled]{ opacity:.45; cursor:not-allowed; }
+  .btn.ghost{ background:transparent; }
+  select.btn{ padding-right:8px; }
+  .track-extra{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:12px; font-size:13px; color:var(--ink-soft); }
+  .track-extra input[type=date]{ background:var(--paper-sunken); border:1px solid var(--line); border-radius:7px; padding:5px 8px; font-size:13px; color:var(--ink); }
+  .queued-note{ font-size:13px; color:var(--teal-ink); background:var(--teal-soft); border-radius:8px; padding:6px 10px; }
+  .ask-box{ margin-top:14px; border-top:1px dashed var(--line); padding-top:12px; }
+  .ask-box textarea{ width:100%; min-height:52px; resize:vertical; background:var(--paper-sunken); border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:13px; }
+  .ask-answer{ margin-top:8px; font-size:13px; background:var(--paper-sunken); border-radius:8px; padding:10px 12px; white-space:pre-wrap; }
+  .ask-answer:empty{ display:none; }
+
+  .kit{ margin-top:14px; border-top:1px dashed var(--line); padding-top:12px; max-width:720px; }
+  .kit h4{ margin:0 0 8px; font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); }
+  .kit h4 + .actions{ margin-top:0; }
+  .kit-sec{ margin-top:14px; }
+  .kit-item{ display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 10px; align-items:start; padding:8px 0; border-top:1px solid var(--line); font-size:13px; }
+  .kit-item:first-of-type{ border-top:0; }
+  .kit-item .q{ font-weight:600; color:var(--ink); grid-column:1 / -1; }
+  .kit-item .a{ white-space:pre-wrap; color:var(--ink-soft); user-select:text; -webkit-user-select:text; cursor:text; }
+  .kit-item .lbl{ color:var(--ink-faint); font-size:12px; }
+  .kit-fields{ display:grid; grid-template-columns:120px minmax(0,1fr) auto; gap:2px 10px; align-items:center; font-size:13px; }
+  .kit-fields .v{ user-select:text; -webkit-user-select:text; cursor:text; overflow-wrap:anywhere; }
+  .kit-fields .warn, .kit-item .warn{ grid-column:1 / -1; font-size:12px; color:var(--urgent); margin:-2px 0 6px; }
+  .cover-text{ white-space:pre-wrap; background:var(--paper-sunken); border-radius:8px; padding:10px 12px; font-size:13px; max-height:220px; overflow:auto; user-select:text; -webkit-user-select:text; }
+  .flag{ display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:1px 7px; border-radius:99px; background:var(--urgent-soft); color:var(--urgent); margin-left:6px; vertical-align:1px; }
+  .flag.draft{ background:var(--brass-soft); color:var(--brass-ink); }
+  .copy{ border:1px solid var(--line); background:var(--paper-raised); border-radius:7px; padding:2px 9px; font-size:12px; color:var(--ink-soft); white-space:nowrap; }
+  .copy:hover{ border-color:var(--ink-faint); color:var(--ink); }
+  .copy.done{ color:var(--good); border-color:var(--good); }
+  .more-wrap{ display:flex; align-items:center; justify-content:center; gap:12px; padding:12px 0 4px; font-size:13px; color:var(--ink-faint); }
+  .showing{ font-size:12.5px; color:var(--ink-faint); margin:0 0 8px 4px; }
+
+  .empty{ background:var(--paper-raised); border:1px dashed var(--line); border-radius:10px; padding:34px 24px; text-align:center; color:var(--ink-soft); font-size:14px; }
+  .empty strong{ display:block; color:var(--ink); font-size:16px; margin-bottom:6px; font-family:"Barlow Semi Condensed",sans-serif; }
+
+  .toast{
+    position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:60; max-width:min(560px, 92vw);
+    display:flex; align-items:center; gap:14px; background:var(--ink); color:var(--paper); padding:10px 16px; border-radius:10px; box-shadow:var(--pop); font-size:14px;
+  }
+  .toast button{ background:transparent; border:0; color:var(--brass-soft); font-weight:600; text-decoration:underline; padding:0; }
+  :root[data-theme="dark"] .toast button, :root:not([data-theme="light"]) .toast button{ color:var(--brass); }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+  @media (max-width:700px){
+    .tabs{ flex-direction:column; }
+    .bars, .rank{ display:none; }
+    .row-detail{ padding-left:16px; }
+    .detail-grid{ grid-template-columns:1fr; }
+    .pill{ display:none; }
+    .peek{ right:auto; left:-180px; }
+  }
+</style>
+
+<div class="app">
+  <header class="top">
+    <h1>Job Board</h1>
+    <div class="grow"></div>
+    <div class="byline">Last swept <span class="mono" id="lastSwept">—</span></div>
+    <button class="icon-btn" id="legendBtn" aria-label="How scores work" aria-expanded="false" title="How scores work">?</button>
+    <div class="pop legend-pop" id="legendPop" hidden>
+      <h3>How a score is built</h3>
+      <p>Each job gets sub-scores (0–100) blended with fixed weights. Hover any score to see its breakdown.</p>
+      <dl>
+        <dt>Internships</dt><dd>Location 30% · Odds 25% · Résumé value 20% · Fit 15% · Urgency 10%</dd>
+        <dt>Part-time</dt><dd>Pay &amp; hours 30% · Résumé value 30% · Odds 20% · Commute 20%</dd>
+      </dl>
+      <p><strong>Location:</strong> San Diego area and Bay Area 100 · rest of California 70 · remote (US) 60 · rest of the US 30. A posting listing several cities takes its best one. Postings only outside the US are left off.</p>
+      <p><strong>Fit is category-only for most jobs.</strong> The community internship feeds carry no job description, so Fit can't compare the posting to your résumé until it's tailored. Pay shows only when the posting states it; estimates are ignored.</p>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-track="internship">
+      <div><span class="label">Internships</span><span class="sub">Summer 2027 · California first</span></div>
+      <span class="count mono" id="countInternship">0</span>
+    </button>
+    <button class="tab" data-track="parttime">
+      <div><span class="label">Part-Time</span><span class="sub">San Diego · on-campus · remote</span></div>
+      <span class="count mono" id="countParttime">0</span>
+    </button>
+  </div>
+
+  <div class="bar">
+    <div class="folders" id="folders" role="group" aria-label="Folders"></div>
+    <div class="grow"></div>
+    <select class="ctl" id="sortSelect" aria-label="Sort">
+      <option value="score">Sort: Score</option>
+      <option value="deadline">Sort: Deadline</option>
+      <option value="posted">Sort: Newest</option>
+    </select>
+    <button class="ctl" id="groupBtn" aria-pressed="false" title="Group by role type">Group</button>
+    <button class="ctl" id="filtersBtn" aria-expanded="false">Filters<span class="badge" id="filtersBadge" hidden>0</span></button>
+    <div class="pop filters-pop" id="filtersPop" hidden>
+      <label>Role type<select id="fGroup"></select></label>
+      <label id="fRegionWrap">Region
+        <select id="fRegion"><option value="">All of the US</option><option value="ca">California (all)</option><option value="sd">San Diego area</option><option value="bay">Bay Area</option><option value="remote">Remote (US)</option><option value="us">Rest of US</option></select>
+      </label>
+      <label id="fMilesWrap">Distance from SDSU
+        <select id="fMiles"><option value="0">Any distance</option><option value="5">Within 5 mi</option><option value="10">Within 10 mi</option><option value="15">Within 15 mi</option><option value="20">Within 20 mi</option></select>
+      </label>
+      <label id="fPayWrap">Minimum stated pay
+        <select id="fPay"><option value="0">Any / not stated</option><option value="15">$15/hr +</option><option value="20">$20/hr +</option><option value="25">$25/hr +</option><option value="30">$30/hr +</option></select>
+      </label>
+      <label class="inline"><input type="checkbox" id="fRemote"> Remote only</label>
+      <button class="btn ghost" id="fClear" style="align-self:flex-start">Clear filters</button>
+    </div>
+  </div>
+
+  <div class="board" id="board"></div>
+  <div class="empty" id="emptyState" hidden></div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function(){
+  "use strict";
+
+  // Baked-in fallback (offline / no db grant). The shared `jobs` collection is canonical
+  // once its first snapshot arrives; status changes are written there per document.
+  var SEED = { generated_at: null, internships: [], parttime: [] };   // baked in by scripts/build-board.mjs
+
+  var FOLDERS = [
+    { id:"inbox",     label:"Inbox",     statuses:["new"] },
+    { id:"starred",   label:"Starred",   statuses:["shortlisted","tailoring","ready"], glyph:"★" },
+    { id:"applied",   label:"Applied",   statuses:["applied","interview","offer","rejected"] },
+    { id:"dismissed", label:"Dismissed", statuses:["dismissed"] }
+  ];
+  var STATUS_LABEL = { "new":"New", shortlisted:"Starred", tailoring:"Queued to tailor", ready:"Ready", applied:"Applied", interview:"Interview", offer:"Offer", rejected:"Rejected", dismissed:"Dismissed" };
+  var STAGES = ["applied","interview","offer","rejected"];
+  var SUB_LABEL = { location:"Location", odds:"Odds", resume_value:"Résumé value", fit:"Fit", urgency:"Urgency", pay_hours:"Pay & hours", commute:"Commute" };
+  var SUB_ORDER = { internship:["location","odds","resume_value","fit","urgency"], parttime:["pay_hours","resume_value","odds","commute"] };
+
+  var REGION_LABEL = { sd:"San Diego", bay:"Bay Area", ca:"California", remote:"Remote (US)", us:"Rest of US", nonus:"Outside US" };
+  var PAGE = 50;
+  function noFilters(){ return { group:"", region:"", miles:0, remote:false, pay:0 }; }
+  var state = { track:"internship", folder:"inbox", sort:"score", group:false,
+                filters:noFilters(), pages:{},
+                openId:null, docs:{}, ask:{}, profile:null };
+  var dbCap = null, downloadsCap = null, sampleCap = null, warnedNoSave = false;
+
+  // ---- tiny helpers ----
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function fmtDate(iso){ var d = new Date(iso); return isNaN(d) ? "" : d.toLocaleDateString(undefined,{month:"short",day:"numeric"}); }
+  function daysUntil(iso){ return Math.round((new Date(iso).getTime() - Date.now())/864e5); }
+  function daysAgo(iso){ var n = -daysUntil(iso); return isNaN(n) ? null : n; }
+  function todayISO(){ var d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function savePrefs(){ try{ localStorage.setItem("jb.prefs", JSON.stringify({ track:state.track, folder:state.folder, sort:state.sort, group:state.group })); }catch(e){} }
+  function loadPrefs(){ try{ var p = JSON.parse(localStorage.getItem("jb.prefs")||"null"); if(p){ state.track = p.track==="parttime"?"parttime":"internship"; state.folder = p.folder||"inbox"; state.sort = p.sort||"score"; state.group = !!p.group; } }catch(e){} }
+  function folderOf(doc){ for(var i=0;i<FOLDERS.length;i++){ if(FOLDERS[i].statuses.indexOf(doc.status||"new")>=0) return FOLDERS[i].id; } return "inbox"; }
+  function docsOfTrack(){ return Object.keys(state.docs).map(function(k){return state.docs[k];}).filter(function(d){ return d.track===state.track; }); }
+
+  // ---- filters / sort ----
+  function passes(d){
+    var f = state.filters;
+    if(f.group && d.role_group !== f.group) return false;
+    if(f.region && (f.region==="ca" ? ["sd","bay","ca"].indexOf(d.region)<0 : d.region !== f.region)) return false;
+    if(f.remote && !d.remote) return false;
+    if(f.miles && !d.remote && d.miles != null && d.miles > f.miles) return false;   // unknown distance is never hidden
+    if(f.pay && (d.hourly == null || d.hourly < f.pay)) return false;
+    return true;
+  }
+  function activeFilterCount(){ var f = state.filters; return (f.group?1:0)+(f.region?1:0)+(f.miles?1:0)+(f.remote?1:0)+(f.pay?1:0); }
+  function sorter(){
+    return function(a,b){
+      if(state.sort==="deadline"){ var x = a.deadline?new Date(a.deadline).getTime():Infinity, y = b.deadline?new Date(b.deadline).getTime():Infinity; return x-y; }
+      if(state.sort==="posted") return new Date(b.posted_at||0) - new Date(a.posted_at||0);
+      return (b.score||0) - (a.score||0);
+    };
+  }
+
+  // ---- pieces of a row ----
+  function bar(v){ return '<div class="bar-track"><div class="bar-fill" style="width:'+Math.round((v||0)*100)+'%"></div></div>'; }
+  function subKeys(d){ var order = SUB_ORDER[d.track]||[]; var s = d.subscores||{}; return order.filter(function(k){ return typeof s[k]==="number"; }); }
+  function metricsHTML(d){
+    var s = d.subscores||{};
+    return subKeys(d).map(function(k){ return '<div class="m"><span>'+SUB_LABEL[k]+'</span>'+bar(s[k])+'<span class="v">'+Math.round(s[k]*100)+'</span></div>'; }).join("");
+  }
+  function chipsHTML(d){
+    var c = [];
+    if(d.track==="internship" && d.region && d.region!=="remote" && REGION_LABEL[d.region]) c.push('<span class="chip'+(d.region==="sd"||d.region==="bay"?' pay':'')+'">'+REGION_LABEL[d.region]+'</span>');
+    if(d.hourly != null) c.push('<span class="chip pay">$'+Math.round(d.hourly)+'/hr stated</span>');
+    if(d.remote) c.push('<span class="chip">Remote</span>');
+    else if(d.miles != null) c.push('<span class="chip">~'+d.miles+' mi from SDSU</span>');
+    if(d.deadline){ var n = daysUntil(d.deadline); c.push('<span class="chip'+(n<=7?' urgent':'')+'">'+(n<0?'Closed':'Due in '+n+'d')+'</span>'); }
+    var ago = d.posted_at ? daysAgo(d.posted_at) : null;
+    if(ago != null && ago >= 0) c.push('<span class="chip">Posted '+(ago===0?'today':ago+'d ago')+'</span>');
+    if(d.role_group) c.push('<span class="chip">'+esc(d.role_group)+'</span>');
+    if(d.source) c.push('<span class="chip">via '+esc(d.source.replace(/\+/g," + "))+'</span>');
+    return c.join("");
+  }
+  function peekHTML(d){
+    var fit = d.subscores && d.subscores.fit_method==="category_only";
+    return '<div class="peek" role="tooltip"><h4>Score breakdown</h4>'+metricsHTML(d)+
+      '<div class="chips" style="margin:10px 0 0">'+chipsHTML(d)+'</div>'+
+      (fit ? '<div class="note">Fit uses role category only — this source has no job description.</div>' : '')+'</div>';
+  }
+
+  function rowHTML(d, idx){
+    var open = state.openId === d.id;
+    var st = d.status || "new";
+    var starOn = st==="shortlisted" || st==="tailoring" || st==="ready";
+    var canToggleStar = st==="new" || st==="shortlisted";
+    var pastStar = STAGES.indexOf(st)>=0 || st==="dismissed";   // applied+ and dismissed rows carry no star
+    var deadlineChip = "";
+    if(d.deadline){ var n = daysUntil(d.deadline); deadlineChip = '<span class="chip'+(n<=7?' urgent':'')+'">'+(n<0?'Closed':n+'d left')+'</span>'; }
+    var fu = (st==="applied"||st==="interview") && d.followup_at && d.followup_at < todayISO() ? '<span class="chip urgent">Follow up</span>' : '';
+    var closedChip = d.closed ? '<span class="pill st-dismissed" title="This posting is no longer listed by its source">Closed</span>' : '';
+    var quick = st==="dismissed"
+      ? '<button class="qbtn" data-act="restore" title="Move back to Inbox">Restore</button>'
+      : (st==="new" || st==="shortlisted") ? '<button class="qbtn" data-act="dismiss" title="Not for me — recoverable from Dismissed">Not for me</button>' : '';
+    var small = subKeys(d).slice(0,4).map(function(k){ return bar(d.subscores[k]); }).join("");
+    return '<div class="row'+(open?' open':'')+'" data-id="'+d.id+'" data-track="'+d.track+'">'+
+      '<div class="row-line">'+
+        (pastStar ? '<span style="width:30px;flex:none"></span>' : '<button class="star'+(starOn?' on':'')+'" data-act="star" aria-pressed="'+starOn+'" aria-label="'+(starOn?'Unstar':'Star')+' this job" title="'+(starOn && !canToggleStar ? 'Starred — change status in the detail panel' : starOn ? 'Unstar' : 'Star to shortlist')+'">'+(starOn?'★':'☆')+'</button>')+
+        '<span class="rank mono">'+(idx+1)+'</span>'+
+        '<button class="row-main" data-act="toggle" aria-expanded="'+open+'">'+
+          '<span class="title"><span class="track-dot '+d.track+'"></span>'+esc(d.title)+'</span>'+
+          '<span class="meta">'+esc(d.company)+' · '+esc(d.location||"—")+(d.remote?' · remote':'')+'</span>'+
+        '</button>'+
+        deadlineChip+fu+closedChip+
+        (st!=="new" ? '<span class="pill st-'+st+'">'+STATUS_LABEL[st]+'</span>' : '')+
+        '<div class="score-cell" tabindex="0" aria-label="Score '+Math.round((d.score||0)*100)+'. Focus or hover for breakdown">'+
+          '<span class="score mono">'+Math.round((d.score||0)*100)+'</span><span class="bars">'+small+'</span>'+peekHTML(d)+
+        '</div>'+
+        '<div class="quick">'+quick+'</div>'+
+        '<span class="chev" aria-hidden="true">▸</span>'+
+      '</div>'+
+      (open ? detailHTML(d) : '')+
+    '</div>';
+  }
+
+  function detailHTML(d){
+    var st = d.status || "new";
+    var hasPkg = d.package && d.package.resume_asset_id;
+    var statusOpts = ["new","shortlisted","tailoring","ready","applied","interview","offer","rejected","dismissed"].map(function(s){
+      return '<option value="'+s+'"'+(st===s?' selected':'')+'>'+STATUS_LABEL[s]+'</option>'; }).join("");
+    var a = state.ask[d.id] || {text:"", answer:""};
+    var acts = '<select class="btn" data-act="status" aria-label="Status">'+statusOpts+'</select>'+
+      (hasPkg ? '' : '<a class="btn" href="'+esc(d.url||"#")+'" target="_blank" rel="noopener">'+(d.closed?'Open posting (closed) ↗':'Open posting ↗')+'</a>');   // the kit has its own Open application
+    if(st==="shortlisted" && !d.closed) acts += '<button class="btn primary" data-act="tailor">Quick tailor</button>';
+    if(st==="ready") acts += '<button class="btn" data-act="applied">Mark applied</button>';
+    acts += '<button class="btn ghost" data-act="askToggle">Ask about this posting</button>';
+    var note = st==="tailoring" ? '<div class="queued-note" style="margin-top:10px">Queued. Tell Claude “tailor my starred jobs” and the package appears here.</div>' : '';
+    if(d.closed) note += '<div class="gap" style="margin-top:10px">This posting is no longer listed by its source — it may have filled or been taken down. '+(st==="ready"?'Your tailored résumé is still here for reference, but don’t expect to submit through the link above.':'Starring won’t queue a tailor pass for a closed posting.')+'</div>';
+    var tracker = (STAGES.indexOf(st)>=0)
+      ? '<div class="track-extra">'+(d.applied_at?'<span>Applied '+fmtDate(d.applied_at)+'</span>':'')+
+        '<label>Follow up by <input type="date" data-act="followup" value="'+esc(d.followup_at||"")+'"></label></div>' : '';
+    return '<div class="row-detail">'+
+      (d.rationale ? '<p class="rationale">'+esc(d.rationale)+'</p>' : '')+
+      // After tailoring, the real gaps from reading the posting replace the scorer's generic line.
+      (Array.isArray(d.tailor_gaps) && d.tailor_gaps.length
+        ? '<div class="gap"><strong>Gaps vs. this posting</strong><ul style="margin:4px 0 0;padding-left:18px">'+
+            d.tailor_gaps.map(function(g){ return '<li>'+esc(g)+'</li>'; }).join('')+'</ul></div>'
+        : (d.gap ? '<p class="gap">Gap — '+esc(d.gap)+'</p>' : ''))+
+      '<div class="chips">'+chipsHTML(d)+'</div>'+
+      '<div class="detail-grid">'+metricsHTML(d)+'</div>'+
+      '<div class="actions">'+acts+'</div>'+note+tracker+(hasPkg ? kitHTML(d) : '')+
+      '<div class="ask-box" '+(a.open?'':'hidden')+'>'+
+        '<textarea data-act="askText" placeholder="Paste a screener question, e.g. “Why do you want to work here?”">'+esc(a.text)+'</textarea>'+
+        '<div style="margin-top:6px"><button class="btn primary" data-act="askGo">Draft an answer</button></div>'+
+        '<div class="ask-answer">'+esc(a.answer)+'</div>'+
+      '</div></div>';
+  }
+
+  // ---- application kit: everything needed to apply, nothing filled in ----
+  function copyBtn(key){ return '<button class="copy" data-act="copy" data-key="'+esc(key)+'">Copy</button>'; }
+  function kitText(d, key){
+    var p = d.package || {};
+    if(key==="cover") return p.cover_text || "";
+    if(key.indexOf("ans:")===0){ var a = (p.answers||[])[+key.slice(4)]; return a ? String(a.a||"") : ""; }
+    if(key.indexOf("f:")===0){ var f = ((state.profile||{}).fields||[]).filter(function(x){ return x.key===key.slice(2); })[0]; return f && f.value ? String(f.value) : ""; }
+    return "";
+  }
+  function prefillHTML(d){
+    var st = d.status || "new";
+    if(d.closed || STAGES.indexOf(st)>=0 || st==="dismissed") return "";
+    var req = d.prefill_requested_at, done = d.prefilled_at && (!req || d.prefilled_at >= req);
+    if(done) return '<div class="queued-note" style="margin-top:10px">Prefilled '+fmtDate(d.prefilled_at)+' — the filled-in application is waiting in the Chrome tab Claude left open. Review it and press Submit yourself. <button class="copy" data-act="prefill">Prefill again</button></div>';
+    if(req) return '<div class="queued-note" style="margin-top:10px">Prefill queued. Tell Claude “prefill my applications” (needs Claude in Chrome). It fills the form and stops before Submit. <button class="copy" data-act="prefillCancel">Cancel</button></div>';
+    return '';
+  }
+  function kitHTML(d){
+    var p = d.package, st = d.status || "new";
+    var canPrefill = !d.closed && STAGES.indexOf(st)<0 && st!=="dismissed" && !d.prefill_requested_at;
+    var h = '<div class="kit"><h4>Application kit</h4><div class="actions">'+
+      '<a class="btn primary" href="'+esc(d.url||"#")+'" target="_blank" rel="noopener">Open application ↗</a>'+
+      '<button class="btn" data-act="dlResume">Download résumé</button>'+
+      (p.cover_asset_id ? '<button class="btn" data-act="dlCover">Download cover letter</button>' : '')+
+      (canPrefill ? '<button class="btn" data-act="prefill" title="Have Claude open this application in Chrome and fill it in — you review and submit">Prefill application</button>' : '')+
+      '</div>'+prefillHTML(d)+
+      '<p class="note" style="font-size:12px;color:var(--ink-faint);margin:8px 0 0">Using Simplify Copilot? Open the application and let it autofill, then swap in this job’s résumé — Simplify only knows the one you uploaded to it.</p>';
+    if(p.cover_text){
+      var todo = /\[TODO/i.test(p.cover_text);
+      h += '<div class="kit-sec"><h4>Cover letter'+(todo?'<span class="flag">Has a TODO</span>':'')+'</h4>'+
+        '<div class="cover-text" data-val="cover">'+esc(p.cover_text)+'</div>'+
+        '<div style="margin-top:6px">'+(todo ? '<span class="lbl" style="font-size:12px;color:var(--urgent)">Fill in the [TODO] before using it — no PDF was built for this reason.</span>' : copyBtn("cover"))+'</div></div>';
+    }
+    var ans = Array.isArray(p.answers) ? p.answers : [];
+    if(ans.length){
+      h += '<div class="kit-sec"><h4>Screener answers</h4>'+ans.map(function(a,i){
+        var flag = a.confirm ? '<span class="flag">You confirm</span>' : a.todo ? '<span class="flag">You answer</span>' : a.draft ? '<span class="flag draft">Draft — edit to taste</span>' : '';
+        var copyable = !a.confirm && !a.todo && a.a;
+        return '<div class="kit-item"><div class="q">'+esc(a.q)+flag+'</div>'+
+          '<div class="a" data-val="ans:'+i+'">'+esc(a.a||"—")+'</div>'+
+          '<div>'+(copyable ? copyBtn("ans:"+i) : '')+'</div></div>';
+      }).join("")+'</div>';
+    }
+    var fields = (state.profile && state.profile.fields) || [];
+    if(fields.length){
+      h += '<div class="kit-sec"><h4>Your details</h4><div class="kit-fields">'+fields.map(function(f){
+        return '<span class="lbl">'+esc(f.label)+'</span>'+
+          '<span class="v" data-val="f:'+esc(f.key)+'">'+(f.value ? esc(f.value) : '<span style="color:var(--ink-faint)">—</span>')+'</span>'+
+          '<span>'+(f.value ? copyBtn("f:"+f.key) : '')+'</span>'+
+          (f.note ? '<span class="warn">'+esc(f.note)+'</span>' : '');
+      }).join("")+'</div></div>';
+    }
+    return h+'</div>';
+  }
+  async function copyKit(rowEl, btn){
+    var d = state.docs[rowEl.dataset.id], key = btn.dataset.key, text = d ? kitText(d, key) : "";
+    if(!text) return;
+    function ok(){ btn.textContent = "Copied"; btn.classList.add("done"); setTimeout(function(){ btn.textContent = "Copy"; btn.classList.remove("done"); }, 1800); }
+    try{ await navigator.clipboard.writeText(text); ok(); return; }catch(e){}
+    try{   // older path, works in some frames that block the async clipboard API
+      var ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); var done = document.execCommand("copy"); document.body.removeChild(ta);
+      if(done){ ok(); return; }
+    }catch(e){}
+    var el = rowEl.querySelector('[data-val="'+key.replace(/"/g,'\\"')+'"]');   // last resort: select it so ⌘C works
+    if(el){ var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+    toast("Copying is blocked here — the text is selected, press ⌘C.");
+  }
+
+  // ---- render ----
+  function render(){
+    var all = docsOfTrack();
+    var counts = {}; FOLDERS.forEach(function(f){ counts[f.id]=0; });
+    all.forEach(function(d){ counts[folderOf(d)]++; });
+    var live = function(t){ return Object.keys(state.docs).filter(function(k){ var d=state.docs[k]; return d.track===t && folderOf(d)!=="dismissed"; }).length; };
+    $("countInternship").textContent = live("internship");
+    $("countParttime").textContent = live("parttime");
+    document.querySelectorAll(".tab").forEach(function(t){ t.classList.toggle("active", t.dataset.track===state.track); });
+
+    $("folders").innerHTML = FOLDERS.map(function(f){
+      return '<button class="folder" data-folder="'+f.id+'" aria-pressed="'+(state.folder===f.id)+'">'+(f.glyph?'<span class="star-glyph">'+f.glyph+'</span>':'')+f.label+'<span class="n">'+counts[f.id]+'</span></button>'; }).join("");
+    $("sortSelect").value = state.sort;
+    $("groupBtn").setAttribute("aria-pressed", state.group);
+    var n = activeFilterCount(); $("filtersBadge").hidden = !n; $("filtersBadge").textContent = n;
+    $("filtersBtn").classList.toggle("on", n>0);
+    var isPT = state.track==="parttime";
+    $("fMilesWrap").hidden = !isPT; $("fPayWrap").hidden = !isPT;
+    var groups = {}; all.forEach(function(d){ if(d.role_group) groups[d.role_group]=1; });
+    var gsel = $("fGroup"), prev = state.filters.group;
+    gsel.innerHTML = '<option value="">All role types</option>'+Object.keys(groups).sort().map(function(g){ return '<option'+(g===prev?' selected':'')+'>'+esc(g)+'</option>'; }).join("");
+
+    $("fRegionWrap").hidden = isPT; $("fRegion").value = state.filters.region;
+    var docs = all.filter(function(d){ return folderOf(d)===state.folder && passes(d); }).sort(sorter());
+    // 50 rows per page; counts and filters always cover the full set.
+    function page(list, key){
+      var lim = state.pages[key] || PAGE, shown = list.slice(0, lim), left = list.length - shown.length;
+      return { rows: shown, more: left > 0 ? '<div class="more-wrap"><button class="btn" data-act="more" data-key="'+esc(key)+'">Show '+Math.min(PAGE,left)+' more</button><span>'+left+' more not shown</span></div>' : '' };
+    }
+    var board = $("board"), empty = $("emptyState");
+    var html = "";
+    if(state.folder==="starred"){
+      var queueable = docs.filter(function(d){ return d.status==="shortlisted"; }).length;
+      html += '<div class="strip"><span class="grow"><strong>'+docs.length+' starred</strong> · '+queueable+' ready to queue for tailoring</span>'+
+        '<button class="btn primary" data-act="tailorAll"'+(queueable?'':' disabled')+'>Quick tailor all ('+queueable+')</button></div>';
+    }
+    if(!docs.length){
+      board.innerHTML = html; empty.hidden = false;
+      empty.innerHTML = emptyText(all.length);
+      if(html) board.innerHTML = html;
+      return;
+    }
+    empty.hidden = true;
+    if(state.folder==="applied"){
+      STAGES.forEach(function(s){
+        var part = docs.filter(function(d){ return d.status===s; }); if(!part.length) return;
+        var pg = page(part, "stage:"+s);
+        html += '<div class="group-h">'+STATUS_LABEL[s]+'<span class="n">'+part.length+'</span></div>'+pg.rows.map(function(d,i){ return rowHTML(d,i); }).join("")+pg.more;
+      });
+    } else if(state.group){
+      var by = {}; docs.forEach(function(d){ (by[d.role_group||"Other"] = by[d.role_group||"Other"] || []).push(d); });
+      // groups ordered by their best-scoring job, so the strongest opportunities lead
+      var top = function(g){ return Math.max.apply(null, by[g].map(function(d){ return d.score||0; })); };
+      Object.keys(by).sort(function(a,b){ return top(b) - top(a); }).forEach(function(g){
+        var pg = page(by[g], "group:"+g);
+        html += '<div class="group-h">'+esc(g)+'<span class="n">'+by[g].length+'</span></div>'+pg.rows.map(function(d,i){ return rowHTML(d,i); }).join("")+pg.more;
+      });
+    } else {
+      var pg = page(docs, "all");
+      if(docs.length > PAGE) html += '<div class="showing">Showing '+pg.rows.length+' of '+docs.length.toLocaleString()+'</div>';
+      html += pg.rows.map(function(d,i){ return rowHTML(d,i); }).join("")+pg.more;
+    }
+    board.innerHTML = html;
+  }
+  function emptyText(total){
+    if(activeFilterCount() && total) return '<strong>No jobs match these filters</strong>Open Filters and clear one, or pick another folder.';
+    if(state.folder==="starred") return '<strong>Nothing starred yet</strong>Tap the ☆ on any job you like. Starred jobs collect here, and Quick tailor builds their résumés.';
+    if(state.folder==="applied") return '<strong>No applications tracked yet</strong>Mark a ready job as applied and it lands here, with stages and follow-up dates.';
+    if(state.folder==="dismissed") return '<strong>Nothing dismissed</strong>Jobs you mark “Not for me” wait here. Restore any of them at any time.';
+    if(state.track==="parttime" && !total) return '<strong>Part-time jobs arrive with the next sweep</strong>Nothing has been pulled for this track yet.';
+    return '<strong>Inbox zero</strong>Everything here is starred, applied, or dismissed.';
+  }
+
+  // ---- toast ----
+  var toastTimer = null;
+  function toast(msg, undo){
+    var t = $("toast"); t.innerHTML = '<span>'+esc(msg)+'</span>'+(undo?'<button id="undoBtn">Undo</button>':""); t.hidden = false;
+    if(undo) $("undoBtn").onclick = function(){ t.hidden = true; undo(); };
+    clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.hidden = true; }, undo?7000:3500);
+  }
+
+  // ---- writes: optimistic locally, then persisted per document ----
+  async function patch(id, fields){
+    var doc = state.docs[id]; if(!doc) return false;
+    var prev = {}; Object.keys(fields).forEach(function(k){ prev[k] = doc[k]; doc[k] = fields[k]; });
+    render();
+    if(!dbCap){ if(!warnedNoSave){ warnedNoSave = true; toast("This view can't save changes — they'll reset on reload."); } return true; }
+    try{ await dbCap.doc("jobs/"+id).update(fields); return true; }
+    catch(e){ Object.keys(prev).forEach(function(k){ doc[k] = prev[k]; }); render(); toast("Couldn't save that change. Check your connection and try again."); return false; }
+  }
+  function setStatus(id, status, extra, undoMsg){
+    var doc = state.docs[id]; if(!doc) return;
+    var before = doc.status || "new", beforeApplied = doc.applied_at;
+    var f = { status: status, status_updated: new Date().toISOString() };
+    if(extra) Object.keys(extra).forEach(function(k){ f[k]=extra[k]; });
+    patch(id, f).then(function(ok){
+      if(ok && undoMsg) toast(undoMsg, function(){ patch(id, { status: before, status_updated: new Date().toISOString(), applied_at: beforeApplied === undefined ? null : beforeApplied }); });
+    });
+  }
+
+  // ---- events ----
+  document.querySelectorAll(".tab").forEach(function(t){ t.addEventListener("click", function(){ state.track = t.dataset.track; state.openId = null; state.filters = noFilters(); state.pages = {}; savePrefs(); render(); }); });
+  $("folders").addEventListener("click", function(e){ var b = e.target.closest(".folder"); if(!b) return; state.folder = b.dataset.folder; state.openId = null; state.pages = {}; savePrefs(); render(); });
+  $("sortSelect").addEventListener("change", function(e){ state.sort = e.target.value; state.pages = {}; savePrefs(); render(); });
+  $("groupBtn").addEventListener("click", function(){ state.group = !state.group; state.pages = {}; savePrefs(); render(); });
+
+  function closePops(except){
+    [["filtersPop","filtersBtn"],["legendPop","legendBtn"]].forEach(function(p){ if(p[0]===except) return; $(p[0]).hidden = true; $(p[1]).setAttribute("aria-expanded","false"); });
+  }
+  function togglePop(pop, btn){ var open = $(pop).hidden; closePops(pop); $(pop).hidden = !open; $(btn).setAttribute("aria-expanded", open); }
+  $("filtersBtn").addEventListener("click", function(e){ e.stopPropagation(); togglePop("filtersPop","filtersBtn"); });
+  $("legendBtn").addEventListener("click", function(e){ e.stopPropagation(); togglePop("legendPop","legendBtn"); });
+  document.addEventListener("click", function(e){ if(!e.target.closest(".pop")) closePops(); });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") closePops(); });
+  $("fGroup").addEventListener("change", function(e){ state.filters.group = e.target.value; state.pages = {}; render(); });
+  $("fRegion").addEventListener("change", function(e){ state.filters.region = e.target.value; state.pages = {}; render(); });
+  $("fMiles").addEventListener("change", function(e){ state.filters.miles = +e.target.value; state.pages = {}; render(); });
+  $("fPay").addEventListener("change", function(e){ state.filters.pay = +e.target.value; state.pages = {}; render(); });
+  $("fRemote").addEventListener("change", function(e){ state.filters.remote = e.target.checked; state.pages = {}; render(); });
+  $("fClear").addEventListener("click", function(){ state.filters = noFilters(); state.pages = {}; $("fRegion").value=""; $("fMiles").value="0"; $("fPay").value="0"; $("fRemote").checked=false; render(); });
+
+  var boardEl = $("board");
+  boardEl.addEventListener("click", function(e){
+    var rowEl = e.target.closest(".row");
+    var actEl = e.target.closest("[data-act]");
+    if(!actEl){ return; }
+    var act = actEl.dataset.act;
+    if(act==="tailorAll"){
+      var ids = docsOfTrack().filter(function(d){ return d.status==="shortlisted" && passes(d); }).map(function(d){ return d.id; });
+      (async function(){ for(var i=0;i<ids.length;i++){ await patch(ids[i], { status:"tailoring", status_updated:new Date().toISOString(), tailor_requested_at:new Date().toISOString() }); }
+        toast("Queued "+ids.length+". Tell Claude “tailor my starred jobs”."); })();
+      return;
+    }
+    if(act==="more"){ var k = actEl.dataset.key; state.pages[k] = (state.pages[k] || PAGE) + PAGE; render(); return; }
+    if(!rowEl) return;
+    var id = rowEl.dataset.id, d = state.docs[id]; if(!d) return;
+    if(act==="toggle"){ state.openId = state.openId===id ? null : id; render(); return; }
+    if(act==="star"){
+      var st = d.status||"new";
+      if(st==="new") setStatus(id,"shortlisted",null,"Starred — find it in Starred.");
+      else if(st==="shortlisted") setStatus(id,"new");
+      else toast("This job is already past starring — change its status in the detail panel.");
+      return;
+    }
+    if(act==="dismiss"){ setStatus(id,"dismissed",null,"Dismissed. Recover it from the Dismissed folder."); return; }
+    if(act==="restore"){ setStatus(id,"new",null,"Restored to Inbox."); return; }
+    if(act==="tailor"){ patch(id, { status:"tailoring", status_updated:new Date().toISOString(), tailor_requested_at:new Date().toISOString() }).then(function(ok){ if(ok) toast("Queued. Tell Claude “tailor my starred jobs”."); }); return; }
+    if(act==="applied"){ setStatus(id,"applied",{ applied_at: todayISO() },"Marked applied — tracked in Applied."); return; }
+    if(act==="dlResume"){ downloadAsset(id, "resume"); return; }
+    if(act==="dlCover"){ downloadAsset(id, "cover"); return; }
+    if(act==="copy"){ copyKit(rowEl, actEl); return; }
+    if(act==="prefill"){ patch(id, { prefill_requested_at: new Date().toISOString() }).then(function(ok){ if(ok) toast("Prefill queued. Tell Claude “prefill my applications”."); }); return; }
+    if(act==="prefillCancel"){ patch(id, { prefill_requested_at: null }); return; }
+    if(act==="askToggle"){ var a = state.ask[id] = state.ask[id] || {text:"",answer:""}; a.open = !a.open; render(); return; }
+    if(act==="askGo"){ askAbout(id); return; }
+  });
+  boardEl.addEventListener("change", function(e){
+    var rowEl = e.target.closest(".row"); if(!rowEl) return; var id = rowEl.dataset.id;
+    if(e.target.dataset.act==="status"){ var v = e.target.value; setStatus(id, v, v==="applied" && !state.docs[id].applied_at ? {applied_at:todayISO()} : null); }
+    if(e.target.dataset.act==="followup"){ patch(id, { followup_at: e.target.value || null }); }
+  });
+  boardEl.addEventListener("input", function(e){
+    if(e.target.dataset.act==="askText"){ var id = e.target.closest(".row").dataset.id; (state.ask[id] = state.ask[id] || {text:"",answer:""}).text = e.target.value; }
+  });
+
+  // Candidate identity comes from the meta/profile doc (built by scripts/profile-doc.mjs), never hard-coded.
+  function profileField(key){ var f = ((state.profile||{}).fields||[]).filter(function(x){ return x.key===key; })[0]; return f && f.value ? String(f.value) : ""; }
+  function filePrefix(){ var n = profileField("name"); return n ? n.replace(/[^a-z0-9]+/gi,"_")+"_" : ""; }
+  function candidateBlurb(){
+    var name = profileField("name") || "the candidate", school = profileField("school"), grad = profileField("grad"), degree = profileField("degree");
+    return name + (degree||school ? ", a "+(degree ? degree+" student" : "student")+(school ? " at "+school : "") : "") + (grad ? " (graduating "+grad+")" : "");
+  }
+  async function downloadAsset(id, kind){
+    var doc = state.docs[id], p = doc && doc.package; if(!p) return;
+    var assetId = kind==="cover" ? p.cover_asset_id : p.resume_asset_id; if(!assetId) return;
+    var btn = document.querySelector('.row[data-id="'+id+'"] [data-act="'+(kind==="cover"?"dlCover":"dlResume")+'"]'); var label = btn ? btn.textContent : "";
+    function flash(t){ if(btn){ btn.textContent = t; setTimeout(function(){ btn.textContent = label; }, 2500); } }
+    if(!downloadsCap){ try{ downloadsCap = await claude.use("downloads"); }catch(e){} }
+    if(!downloadsCap){ flash("Downloads unavailable here"); return; }
+    try{
+      var res = await fetch("/_blob/" + assetId);   // stored assets serve at /_blob/<id>
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      var blob = await res.blob();
+      await downloadsCap.save({ filename: filePrefix()+doc.company.replace(/[^a-z0-9]+/gi,"_")+(kind==="cover"?"_cover_letter.pdf":"_resume.pdf"), data: blob });
+    }catch(e){ flash(e && e.code==="cancelled" ? label : "Couldn't save — try again"); }
+  }
+
+  async function askAbout(id){
+    var doc = state.docs[id], a = state.ask[id]; if(!a || !a.text.trim()) return;
+    var out = document.querySelector('.row[data-id="'+id+'"] .ask-answer'); if(!out) return;
+    out.textContent = "Thinking…";
+    if(!sampleCap){ try{ sampleCap = await claude.use("sample"); }catch(e){} }
+    if(!sampleCap){ out.textContent = "Not available in this view."; return; }
+    try{
+      var res = await sampleCap(
+        "You are drafting a short, honest, first-person application-screener answer for "+candidateBlurb()+", applying to: "+doc.title+" at "+doc.company+" ("+(doc.location||"")+"). Question: \""+a.text+"\". Answer in 2-4 sentences, first person, no invented experience.",
+        { onText: function(t){ out.textContent = t.text; } });
+      a.answer = res.text; out.textContent = res.text;
+    }catch(e){ out.textContent = "Couldn't draft an answer right now ("+(e.code||"error")+")."; }
+  }
+
+  // ---- boot ----
+  function loadSeed(){
+    state.docs = {};
+    SEED.internships.concat(SEED.parttime).forEach(function(d){ state.docs[d.id] = d; });
+    $("lastSwept").textContent = SEED.generated_at ? new Date(SEED.generated_at).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}) : "never";
+  }
+  async function boot(){
+    loadPrefs(); loadSeed(); render();
+    var db = null; try{ db = await claude.use("db"); }catch(e){}
+    if(!db) return;
+    dbCap = db;
+    try{
+      db.collection("jobs").onSnapshot(function(snap){
+        if(snap.empty) return;
+        var next = {}; snap.docs.forEach(function(d){ var v = d.data(); if(v) next[d.id] = v; });
+        state.docs = next; render();
+      }, function(){});
+    }catch(e){}
+    try{   // "Your details" for the application kit
+      db.collection("meta").onSnapshot(function(snap){
+        snap.docs.forEach(function(d){ if(d.id==="profile"){ state.profile = d.data(); render(); } });
+      }, function(){});
+    }catch(e){}
+  }
+  boot();
+})();
+</script>

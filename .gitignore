@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Secrets — API keys live only in .env (see .env.example)
+.env
+
+# Personal data — the real candidate's files. The repo ships *.example.yaml instead.
+profile.yaml
+resume/master.yaml
+board/artifact.url
+schedule/*.plist
+
+# Generated / runtime state
+data/
+applications/
+logs/
+app/
+*.log
+.DS_Store
+board/dist/

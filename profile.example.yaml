@@ -1,0 +1,77 @@
+# Ranking inputs for the scorer (scripts/score.mjs). This EXAMPLE describes a fictional
+# candidate so the project runs out of the box. Copy to profile.yaml and edit for yourself:
+#   cp profile.example.yaml profile.yaml        (profile.yaml is gitignored)
+# Values marked PENDING_DEFAULT are placeholders: anything resting on one is flagged
+# [CONFIRM] in generated application answers instead of being stated as fact.
+
+meta:
+  last_updated: 2026-11-09
+  note: "Fields marked PENDING_DEFAULT are guesses standing in for real input, not facts."
+
+candidate:
+  grad_month: 2028-05
+  school: "San Diego State University"
+  target_term: "Summer 2027"               # used in drafted availability answers
+  campus_aliases: ["SDSU"]                 # other names your school posts jobs under
+  home: { lat: 32.7757, lon: -117.0719 }   # commute origin for part-time jobs (here: campus)
+  work_authorization: PENDING_DEFAULT       # deliberately unconfirmed — shows the [CONFIRM] flow
+  work_authorization_confidence: low
+  profile_strength: 0.55                   # 0-1 heuristic: "odds vs a typical applicant".
+                                            # Feeds the odds subscore; revisit as interview
+                                            # feedback arrives.
+
+logistics:
+  pay_floor_hourly: 17.00                  # PENDING_DEFAULT — CA minimum wage as of 2026-01-01
+  max_hours_week: 20                       # PENDING_DEFAULT — typical full-time-student cap
+  max_commute_minutes: 30                  # PENDING_DEFAULT
+  car_access: true                          # PENDING_DEFAULT
+  weekends_ok: true                        # PENDING_DEFAULT
+  evenings_ok: true                        # PENDING_DEFAULT
+  currently_employed: false                # PENDING_DEFAULT
+  class_schedule_blocks: []                # PENDING — no data yet; empty = no known conflicts
+
+preferences:
+  internship_role_types: ["Software", "AI/ML/Data", "Quant"]   # PENDING_DEFAULT
+  parttime_role_types_ranked: ["IT/Support", "Software", "on-campus", "tutoring", "any"]
+  industries_to_exclude: []                # PENDING — none declared yet
+
+# ── Weights ───────────────────────────────────────────────────────────────────
+# Sum to 1.0 within each track. Tune here, not in code.
+weights:
+  internship:
+    # Location is a real weighted factor (California first). A small additive bonus was tried
+    # first and left the top 43 with zero San Diego jobs — weights, not bonuses, move rankings.
+    odds: 0.25
+    resume_value: 0.20
+    fit: 0.15
+    urgency: 0.10
+    location: 0.30
+  parttime:
+    pay_hours: 0.30
+    resume_value: 0.30
+    odds: 0.20
+    commute: 0.20
+
+# Company tiers feed the `odds` subscore: more selective => lower odds of an offer,
+# holding fit constant. Deliberately short and conservative — unknown companies
+# default to 'standard', never penalized for being unrecognized.
+company_tiers:
+  elite: [google, alphabet, meta, facebook, apple, amazon, microsoft, netflix, openai,
+          anthropic, "jane street", "two sigma", citadel, "citadel securities", "d e shaw",
+          "de shaw", "susquehanna", sig, jpmorgan, "jp morgan", "goldman sachs", stripe,
+          databricks, palantir, "scale ai", scaleai, nvidia, tesla, spacex, "de shaw",
+          airbnb, uber, doordash, robinhood]
+  competitive: [figma, notion, ramp, brex, plaid, chime, affirm, verkada, samsara,
+                gitlab, cloudflare, asana, dropbox, instacart, linear, vanta, mercury,
+                kraken, veeva, "scale ai"]
+  # everything else -> 'standard'
+
+# Internship `location` subscore by region (tiers computed in scripts/lib/derive.mjs → locationTier).
+# A posting listing several cities takes its best region. Postings located only outside the US are
+# gated out entirely (the search is US-only). Part-time location is handled by the commute subscore.
+location_tiers:
+  sd: 1.0        # San Diego area
+  bay: 1.0       # Bay Area
+  ca: 0.7        # rest of California
+  remote: 0.6    # remote, US
+  us: 0.3        # rest of the US

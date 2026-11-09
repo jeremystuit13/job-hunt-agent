@@ -1,0 +1,185 @@
+# MASTER RÉSUMÉ LIBRARY — EXAMPLE (fictional candidate "Alex Rivera").
+# Copy to resume/master.yaml (gitignored) and replace with your own history:
+#   cp resume/master.example.yaml resume/master.yaml
+#
+# This is not a document, it is a SUPERSET: every bullet you could ever use, each with a
+# stable id, skill tags, and optional variants. Tailoring SELECTS from it, never invents.
+#
+# Rules enforced by scripts/render-resume.mjs:
+#   * Every rendered line MUST trace to a bullet `id` here. No id => the build fails.
+#   * Tailoring may re-word (verbs, emphasis, terminology) via `variants`.
+#   * Tailoring may NOT change numbers, technologies, scope, or dates.
+#   * `variants` are alternate phrasings of the SAME fact, chosen per job.
+#   * `verified:` records where a claim came from, so nothing is unsourced.
+
+meta:
+  owner: Alex Rivera
+  last_updated: 2026-11-09
+  sources_merged: [example]
+
+identity:
+  name: Alex Rivera
+  phone: "(555) 010-0142"
+  email: alex.rivera@example.com
+  location: "San Diego, CA"
+  linkedin: "linkedin.com/in/example"
+  github: "github.com/example"
+  portfolio: null
+  verified: example
+
+education:
+  - id: edu-main
+    primary: true                       # the one shown on the résumé and in application answers
+    school: San Diego State University
+    location: San Diego, CA
+    degree: Bachelor of Science in Computer Science
+    start: 2024-08
+    expected_grad: 2028-05
+    gpa: 3.6
+    verified: example
+    coursework: [Data Structures, Computer Organization, Discrete Math, Intro to Databases]
+
+experience:
+  - id: exp-campus-it
+    org: SDSU Information Technology Division
+    role: Student IT Support Technician
+    location: San Diego, CA
+    start: 2025-01
+    end: present
+    relevance: [it-support, software]
+    verified: example
+    bullets:
+      - id: it-1
+        text: "Resolved 400+ help-desk tickets across hardware, network, and account issues for students and staff, maintaining a 95% first-contact resolution rate"
+        variants:
+          backend: "Triaged and resolved 400+ support tickets spanning network, account, and device issues, documenting fixes to cut repeat incidents"
+          short: "Resolved 400+ help-desk tickets with a 95% first-contact resolution rate"
+        tags: [it-support, troubleshooting, networking, customer-service, documentation]
+      - id: it-2
+        text: "Wrote PowerShell scripts that automated lab-machine imaging checks, reducing a weekly 3-hour manual audit to 15 minutes"
+        variants:
+          backend: "Automated weekly lab-machine compliance audits with PowerShell, cutting a 3-hour manual process to 15 minutes"
+          data: "Built PowerShell automation that collected and summarized lab-machine audit data, cutting a 3-hour weekly report to 15 minutes"
+        tags: [automation, scripting, powershell, windows]
+
+  - id: exp-research
+    org: SDSU Data Science Lab
+    role: Undergraduate Research Assistant
+    location: San Diego, CA
+    start: 2025-09
+    end: present
+    relevance: [ai-ml-data, software]
+    verified: example
+    bullets:
+      - id: rs-1
+        text: "Cleaned and merged 3 public transit datasets (1.2M rows) in Python and pandas to support a ridership forecasting study"
+        variants:
+          data: "Built a reproducible pandas pipeline that cleaned and joined 1.2M rows from 3 public transit datasets for a ridership forecasting study"
+          backend: "Wrote Python data-processing scripts that merged 1.2M rows from 3 transit datasets into a single analysis-ready table"
+        tags: [python, pandas, data-cleaning, data-analysis, research]
+      - id: rs-2
+        text: "Built Matplotlib dashboards summarizing weekly model error for the research team"
+        variants:
+          data: "Visualized weekly forecasting-model error in Matplotlib dashboards used in research-team reviews"
+        tags: [python, data-visualization, matplotlib, dashboard-development]
+
+  - id: exp-tutor
+    org: SDSU Math Learning Center
+    role: Peer Tutor
+    location: San Diego, CA
+    start: 2024-10
+    end: 2025-05
+    relevance: [tutoring, parttime]
+    verified: example
+    bullets:
+      - id: tu-1
+        text: "Tutored 30+ students per week in calculus and introductory programming, in one-on-one and small-group sessions"
+        tags: [tutoring, teaching, communication, python, java]
+
+  - id: exp-retail
+    org: Trader Joe's
+    role: Crew Member
+    location: San Diego, CA
+    start: 2023-06
+    end: 2024-08
+    relevance: [parttime]
+    verified: example
+    bullets:
+      - id: rt-1
+        text: "Handled register, stocking, and customer questions in a high-volume store, recognized twice for customer service"
+        tags: [customer-service, teamwork, retail]
+
+projects:
+  - id: proj-tracker
+    name: Campus Shuttle Tracker
+    role: Sole author
+    start: 2025-11
+    end: present
+    stack: [Python, FastAPI, SQLite, GitHub Actions]
+    verified: example
+    bullets:
+      - id: pt-1
+        text: "Built a FastAPI service that polls the campus shuttle GPS feed every 30 seconds and predicts arrival times for 12 stops"
+        variants:
+          backend: "Designed and shipped a FastAPI + SQLite service that ingests a live GPS feed every 30s and serves arrival predictions for 12 stops"
+          data: "Built a live-data pipeline that ingests shuttle GPS pings every 30s, stores history in SQLite, and models arrival times for 12 stops"
+        tags: [python, fastapi, rest-api, sqlite, backend, real-time]
+      - id: pt-2
+        text: "Set up GitHub Actions CI with pytest (40 tests) and automated deploys to a free-tier cloud VM"
+        variants:
+          backend: "Owned CI/CD for the service: GitHub Actions running 40 pytest tests on every push, with automated deploys to a cloud VM"
+        tags: [github-actions, ci-cd, testing, pytest, devops, linux]
+
+skills:
+  languages_programming:
+    - { id: sk-python, name: Python, level: working, verified: example }
+    - { id: sk-java, name: Java, level: coursework, verified: example }
+    - { id: sk-sql, name: SQL, level: working, verified: example }
+  tools:
+    - { id: sk-git, name: Git / GitHub, level: working, verified: example }
+    - { id: sk-gha, name: GitHub Actions, level: working, verified: example }
+    - { id: sk-fastapi, name: FastAPI, level: working, verified: example }
+    - { id: sk-pandas, name: pandas, level: working, verified: example }
+    - { id: sk-linux, name: Linux, level: basic, verified: example }
+  spoken_languages:
+    - { id: sk-english, name: English, level: fluent, verified: example }
+    - { id: sk-spanish, name: Spanish, level: conversational, verified: example }
+  soft:
+    - { id: sk-soft, names: [Communication, Teamwork, Customer service], verified: example }
+
+certifications: []
+
+summary_variants:
+  - track: internship
+    text: "Computer Science student at San Diego State University (graduating May 2028) who builds and ships backend and data tools: a real-time FastAPI service with CI/CD, research data pipelines, and IT automation."
+  - track: parttime
+    text: "Reliable SDSU Computer Science student with campus IT, tutoring, and customer-service experience, available evenings and weekends."
+
+# Default one-page layouts, used when a job has no JD-matched selection.json.
+# `internship` also applies to any tech-category job. Entries with `only_if: tutoring`
+# appear only for IT/Support or tutoring/teaching roles.
+layouts:
+  internship:
+    experience:
+      - { org: "SDSU Data Science Lab — Undergraduate Research Assistant", sub: "San Diego, CA", dates: "Sep 2025 – Present", bulletIds: [rs-1, rs-2] }
+      - { org: "SDSU IT Division — Student IT Support Technician", sub: "San Diego, CA", dates: "Jan 2025 – Present", bulletIds: [it-2, it-1] }
+    projects:
+      - { org: "Campus Shuttle Tracker", sub: "Sole author · Python, FastAPI, SQLite", dates: "Nov 2025 – Present", bulletIds: [pt-1, pt-2] }
+  parttime_tech:
+    experience:
+      - { org: "SDSU IT Division — Student IT Support Technician", sub: "San Diego, CA", dates: "Jan 2025 – Present", bulletIds: [it-1, it-2] }
+      - { org: "SDSU Math Learning Center — Peer Tutor", sub: "San Diego, CA", dates: "Oct 2024 – May 2025", bulletIds: [tu-1] }
+  parttime:
+    experience:
+      - { org: "SDSU IT Division — Student IT Support Technician", sub: "San Diego, CA", dates: "Jan 2025 – Present", bulletIds: [it-1] }
+      - { org: "SDSU Math Learning Center — Peer Tutor", sub: "San Diego, CA", dates: "Oct 2024 – May 2025", bulletIds: [tu-1], only_if: tutoring }
+      - { org: "Trader Joe's — Crew Member", sub: "San Diego, CA", dates: "Jun 2023 – Aug 2024", bulletIds: [rt-1] }
+
+# The one bullet the cover letter quotes as prose. `framing` must be true of that bullet.
+cover_letter:
+  highlight_bullet: pt-1
+  framing: "In a personal project, I"
+
+# Disagreements between résumé sources are recorded, never silently resolved.
+# The board's "Your details" panel flags any field with an open conflict.
+factual_conflicts_found: []

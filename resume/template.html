@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{NAME}} — Résumé</title>
+<style>
+  /* ATS-safe by construction: single column, real text, standard headings,
+     no tables/icons/graphics/columns. System fonts only (a web font can
+     silently fail to embed in some ATS PDF parsers). */
+  @page { size: letter; margin: 0.55in 0.65in; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, "Liberation Sans", sans-serif;
+    font-size: 10.3pt; line-height: 1.32; color: #111; margin: 0;
+  }
+  h1 { font-size: 17pt; margin: 0 0 2pt; font-weight: 700; letter-spacing: .2pt; }
+  .contact { font-size: 9pt; color: #333; margin-bottom: 10pt; }
+  .contact a { color: #333; text-decoration: none; }
+  h2 {
+    font-size: 10.5pt; text-transform: uppercase; letter-spacing: .6pt;
+    border-bottom: 1pt solid #111; padding-bottom: 1pt; margin: 10pt 0 5pt;
+    font-weight: 700;
+  }
+  .summary { margin: 0 0 8pt; }
+  .entry { margin-bottom: 6pt; }
+  .entry-head { display: flex; justify-content: space-between; font-weight: 700; }
+  .entry-sub { display: flex; justify-content: space-between; font-style: italic; color: #333; font-size: 9.5pt; }
+  ul { margin: 2pt 0 0; padding-left: 14pt; }
+  li { margin-bottom: 1.5pt; }
+  .skills-line { margin: 2pt 0; }
+  .skills-line b { font-weight: 700; }
+</style>
+</head>
+<body>
+  <h1>{{NAME}}</h1>
+  <div class="contact">{{CONTACT_LINE}}</div>
+
+  <h2>Summary</h2>
+  <p class="summary">{{SUMMARY}}</p>
+
+  <h2>Experience</h2>
+  {{EXPERIENCE_HTML}}
+
+  {{PROJECTS_SECTION}}
+
+  <h2>Education</h2>
+  {{EDUCATION_HTML}}
+
+  <h2>Skills</h2>
+  {{SKILLS_HTML}}
+</body>
+</html>

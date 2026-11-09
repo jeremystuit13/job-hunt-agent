@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Filled in by schedule/install.sh (__ROOT__ = this checkout). -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>__LABEL__</string>
+  <key>ProgramArguments</key>
+  <array><string>/bin/zsh</string><string>__ROOT__/schedule/daily.sh</string></array>
+  <key>StartCalendarInterval</key>
+  <dict><key>Hour</key><integer>7</integer><key>Minute</key><integer>30</integer></dict>
+  <key>StandardErrorPath</key><string>__ROOT__/logs/launchd.err</string>
+  <key>StandardOutPath</key><string>__ROOT__/logs/launchd.out</string>
+</dict>
+</plist>

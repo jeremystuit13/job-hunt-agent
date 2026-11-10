@@ -2,7 +2,7 @@
 
 **An automated internship and part-time job search that finds postings across four kinds of sources, ranks them with an explainable score, and builds a tailored, fact-checked application kit for each job I choose — while I always press Submit myself.**
 
-![CI](https://github.com/__GITHUB_USER__/job-hunt-agent/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/jeremystuit13/job-hunt-agent/actions/workflows/ci.yml/badge.svg)
 ![Node 22](https://img.shields.io/badge/node-22-339933?logo=node.js&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
 
@@ -81,7 +81,7 @@ More detail: [docs/architecture.md](docs/architecture.md).
 Requires **Node 22.5+** and Google Chrome (used headless to print PDFs).
 
 ```bash
-git clone https://github.com/__GITHUB_USER__/job-hunt-agent.git
+git clone https://github.com/jeremystuit13/job-hunt-agent.git
 cd job-hunt-agent
 npm ci
 npm test                      # 14 tests, incl. a real PDF render for the example candidate

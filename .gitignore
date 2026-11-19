@@ -18,3 +18,4 @@ app/
 *.log
 .DS_Store
 board/dist/
+resume-versions/
